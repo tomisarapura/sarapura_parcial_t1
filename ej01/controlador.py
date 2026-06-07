@@ -1,0 +1,72 @@
+from _redisconnect import redisconnect
+
+r = redisconnect()
+
+cola_solicitudes_estudiantes = "Lab_solicitudes"
+cola_espera_estudiantes = "Lab_espera"
+cola_termina = "Lab_termina"
+cola_liberacion = "Lab_liberacion"
+estaciones_libres_queue = "Lab_estaciones_libres"
+NUM_ESTACIONES = 2
+
+r.delete(estaciones_libres_queue)
+
+for num_estacion in range(1, NUM_ESTACIONES + 1):
+    r.rpush(estaciones_libres_queue, str(num_estacion))
+
+print("[CONTROLADOR] Iniciado.")
+
+loop_activo = True
+
+while loop_activo:
+    
+    solicitud_recibida = r.blpop(cola_solicitudes_estudiantes, timeout=1)
+    if solicitud_recibida:
+        solicitud = solicitud_recibida[1]
+        r.rpush(cola_espera_estudiantes, solicitud)
+        
+    cantidad_en_espera = r.llen(cola_espera_estudiantes) 
+    
+    for i in range(cantidad_en_espera): 
+        estudiante = r.lpop(cola_espera_estudiantes)
+        if estudiante:
+            estudiante_separado = estudiante.split(",")
+            nombre = estudiante_separado[0]
+            grupo = estudiante_separado[1]
+            grupo_clave = f"Lab_grupo_{grupo}"
+            grupo_ocupado = r.exists(grupo_clave)
+            asignado = False
+            
+            if not grupo_ocupado:
+                estacion_disponible = r.lpop(estaciones_libres_queue)  
+
+                if estacion_disponible:
+                    r.set(grupo_clave, "1")
+                    r.set(f"Lab_estacion_ocupada_{estacion_disponible}", f"{nombre} (Grupo {grupo})")
+                    r.rpush(f"Lab_respuesta_{nombre}", estacion_disponible)
+                    print(f"[CONTROLADOR] {nombre} del grupo {grupo} asignado a estación {estacion_disponible}")
+                    asignado = True
+            
+            if not asignado:
+                r.rpush(cola_espera_estudiantes, estudiante)
+
+    liberacion_recibida = r.blpop(cola_liberacion, timeout=1)
+
+    if liberacion_recibida:
+        liberacion_separado = liberacion_recibida[1].split(",")
+        nombre_libera = liberacion_separado[0]
+        grupo_libera = liberacion_separado[1]
+        estacion_liberada = liberacion_separado[2]
+        print(f"[CONTROLADOR] Estación {estacion_liberada} liberada por {nombre_libera}")
+        r.rpush(estaciones_libres_queue, estacion_liberada)
+        r.delete(f"Lab_grupo_{grupo_libera}")
+        r.delete(f"Lab_estacion_ocupada_{estacion_liberada}")
+
+    senal_termina = r.blpop(cola_termina, timeout=1)
+    if senal_termina:
+        loop_activo = False
+
+r.delete(estaciones_libres_queue)
+print("[CONTROLADOR] Finalizando.")
+r.close()
+print("[CONTROLADOR] Sistema detenido")
