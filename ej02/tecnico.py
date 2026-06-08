@@ -1,7 +1,6 @@
 from datagram_modules import MPDU, Datagrama, ControlSistema
 import sys
 
-# Ahora recibe dos parámetros: nombre y sector
 nombre = sys.argv[1] if len(sys.argv) > 1 else "tecnicoX"
 sector = sys.argv[2] if len(sys.argv) > 2 else "Empaque"
 
