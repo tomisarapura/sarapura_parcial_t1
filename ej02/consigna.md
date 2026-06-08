@@ -30,11 +30,11 @@ La asignacion y actualizacion de turnos debe realizarse sobre datos compartidos 
 
 ## Agenda de turnos
 
-| Sector | Turnos disponibles |
-| --- | --- |
-| Envasado | 08:00, 08:30 |
-| Empaque | 09:30 |
-| Limpieza | 10:00, 10:30 |
+| Sector   | Turnos disponibles |
+| -------- | ------------------ |
+| Envasado | 08:00, 08:30       |
+| Empaque  | 09:30              |
+| Limpieza | 10:00, 10:30       |
 
 ## Archivos a desarrollar
 
@@ -46,42 +46,15 @@ La asignacion y actualizacion de turnos debe realizarse sobre datos compartidos 
 
 ## Ejecucion de prueba
 
-```bash
 python controlador.py
 python tecnico.py carlos Envasado
 python tecnico.py laura Empaque
 python tecnico.py pedro Envasado
 python tecnico.py ana Empaque
 python tecnico.py oscar Almacen
-```
 
 ## Finalizacion
 
-```bash
 python termina.py
-```
 
 Cada archivo es un proceso independiente. Ejecutar desde distintas terminales.
-
-## Auditoria de cumplimiento
-
-### Cumple
-
-- Solicitud con nombre y especialidad: `tecnico.py` toma nombre y sector por argumentos y los envia como solicitud.
-- Serializacion con `datagram_modules.py`: `controlador.py` y `tecnico.py` usan `MPDU` y `Datagrama`.
-- Agenda inicial indicada: `controlador.py` carga Envasado, Empaque y Limpieza con los turnos pedidos en listas Redis.
-- Agenda persistida en Redis: los turnos se guardan en claves Redis `agenda:<sector>` durante la ejecucion.
-- No usar agenda local en el controlador: la agenda no se mantiene en listas o diccionarios locales del controlador.
-- Eliminar el turno asignado para evitar duplicaciones: `receive_from(f"agenda:{sector}")` extrae el turno de la lista Redis.
-- Respuesta para especialidad inexistente o sin turnos: el controlador distingue entre especialidad inexistente y sector existente sin disponibilidad; el tecnico muestra `Solicitud rechazada: no hay disponibilidad` cuando corresponde.
-- Recursos liberados al finalizar: `termina.py` detiene el sistema con `control.stop()`, espera la finalizacion y borra la clave de control con `control.delete()`.
-- Finalizacion del controlador: el controlador sale cuando `ControlSistema.is_alive()` deja de indicar sistema activo.
-
-### Cumple parcialmente
-
-- Asignar turno disponible si existe: para sectores existentes con turnos disponibles asigna y elimina un turno de Redis.
-- Evitar asignaciones inconsistentes o superposicion invalida: el uso de `BLPOP` sobre la lista Redis evita duplicar el mismo turno, pero la verificacion previa con `cant_cola` y el `BLPOP` posterior no son una unica operacion atomica.
-
-### No cumple
-
-- Configuracion Redis: en `ej02/_redisconnect.py`, `username` esta vacio aunque la consigna pide completar la conexion a Redis Cloud.

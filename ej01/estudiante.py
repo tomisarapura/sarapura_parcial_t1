@@ -11,22 +11,33 @@ grupo_estudiante = sys.argv[2] if len(sys.argv) > 2 else "A"
 cola_solicitudes_estudiantes = "Lab_solicitudes"
 cola_respuesta_estudiante = f"Lab_respuesta_{nombre_estudiante}"
 cola_liberacion = "Lab_liberacion" 
+cola_termina = "Lab_termina"
 
 print(f"[{nombre_estudiante}] Esperando asignación...")
 
 solicitud = f"{nombre_estudiante},{grupo_estudiante}"
 r.rpush(cola_solicitudes_estudiantes, solicitud)
+#Falta bucle
+loop_activo = True
 
-respuesta_recibida = r.blpop(cola_respuesta_estudiante)
+while loop_activo:
+    respuesta_recibida = r.blpop(cola_respuesta_estudiante)
 
-num_estacion = respuesta_recibida[1]
+    num_estacion = respuesta_recibida[1]
 
-print(f"[{nombre_estudiante}] Asignado a estación {num_estacion}. Editando...")
+    print(f"[{nombre_estudiante}] Asignado a estación {num_estacion}. Editando...")
+    time.sleep(random.randint(2, 5)) #Fingimos el tiempo que usamos la estacion
+    mensaje_liberacion = f"{nombre_estudiante},{grupo_estudiante},{num_estacion}"
+    r.rpush(cola_liberacion, mensaje_liberacion)
 
-time.sleep(random.randint(2, 5))
+    senal_termina = r.blpop(cola_termina, timeout=1)
+    
+    if senal_termina:
+        loop_activo = False
 
-mensaje_liberacion = f"{nombre_estudiante},{grupo_estudiante},{num_estacion}"
-r.rpush(cola_liberacion, mensaje_liberacion)
+
+#Hasta acá
+
 
 print(f"[{nombre_estudiante}] Edición finalizada.")
 
