@@ -39,7 +39,7 @@ while loop_activo:
                 asignado = False
                 
                 if not grupo_ocupado:
-                    estacion_disponible = r.lpop(estaciones_libres_queue)  
+                    estacion_disponible = r.lpop(estaciones_libres_queue) 
 
                     if estacion_disponible:
                         r.set(grupo_clave, "1")
@@ -53,7 +53,7 @@ while loop_activo:
                 if not asignado:
                     r.rpush(cola_espera_estudiantes, estudiante)
                     
-            estudiantes_revisados += 1
+            estudiantes_revisados = estudiantes_revisados + 1
 
     liberacion_recibida = r.blpop(cola_liberacion, timeout=1)
 
