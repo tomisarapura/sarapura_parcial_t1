@@ -7,7 +7,6 @@ cola_espera_estudiantes = "Lab_espera"
 cola_termina = "Lab_termina"
 cola_liberacion = "Lab_liberacion"
 estaciones_libres_queue = "Lab_estaciones_libres"
-NUM_ESTACIONES = 2
 
 r.delete(estaciones_libres_queue)
 
@@ -17,7 +16,7 @@ r.rpush(estaciones_libres_queue, "2")
 print("[CONTROLADOR] Iniciado.")
 
 loop_activo = True
-
+    
 while loop_activo:
     solicitud_recibida = r.blpop(cola_solicitudes_estudiantes, timeout=1)
     if solicitud_recibida:

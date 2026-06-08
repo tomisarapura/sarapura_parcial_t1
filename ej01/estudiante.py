@@ -17,7 +17,7 @@ print(f"[{nombre_estudiante}] Esperando asignación...")
 
 solicitud = f"{nombre_estudiante},{grupo_estudiante}"
 r.rpush(cola_solicitudes_estudiantes, solicitud)
-#Falta bucle
+
 loop_activo = True
 
 while loop_activo:
