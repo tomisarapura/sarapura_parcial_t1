@@ -7,7 +7,7 @@ r = redisconnect()
 r.rpush("Lab_termina", "TERMINAR")
 print("[termina.py] Señal de terminación enviada")
 
-time.sleep(2)
+time.sleep(4)
 
 r.delete("Lab_solicitudes")
 r.delete("Lab_espera")

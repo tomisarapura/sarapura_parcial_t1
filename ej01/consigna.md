@@ -39,41 +39,14 @@ Las estaciones, la cola de espera y cualquier estado compartido deben administra
 
 ## Ejecucion de prueba
 
-```bash
 python controlador.py
 python estudiante.py juan A
 python estudiante.py maria B
 python estudiante.py pedro A
 python estado.py
-```
 
 ## Finalizacion
 
-```bash
 python termina.py
-```
 
 Cada archivo es un proceso independiente. Ejecutar desde distintas terminales.
-
-## Auditoria de cumplimiento
-
-### Cumple
-
-- Dos estaciones de edicion: `controlador.py` define `NUM_ESTACIONES = 2`, limpia la cola de estaciones libres al iniciar y carga dos estaciones en Redis.
-- Solicitud con nombre y grupo: `estudiante.py` recibe nombre y grupo por argumentos y envia ambos a Redis.
-- No editar simultaneamente dos estudiantes del mismo grupo: `controlador.py` usa claves Redis `Lab_grupo_<grupo>` para bloquear grupos activos y las elimina cuando el estudiante libera la estacion.
-- El estudiante libera el recurso al finalizar: `estudiante.py` envia la liberacion y `controlador.py` vuelve a cargar la estacion liberada en la cola de estaciones libres.
-- Validacion de concurrencia entre grupos en Redis: la validacion consulta claves Redis y las actualiza al asignar o liberar estaciones.
-- Controlador administra estaciones y cola de espera: usa listas Redis para solicitudes, espera y estaciones libres, y registra las estaciones ocupadas en Redis.
-- Estado compartido administrado mediante Redis: la cola, las estaciones libres y las estaciones ocupadas estan en Redis.
-- Funcionamiento desde terminales independientes: los procesos se comunican por Redis y el estado de estaciones ocupadas queda disponible para otros procesos.
-- `termina.py` finaliza y libera recursos: envia la senal, borra explicitamente las colas y claves Redis del ejercicio, y cierra la conexion a Redis.
-- `estado.py` muestra estado actual: muestra estaciones ocupadas, estaciones libres y cola de espera consultando claves Redis.
-
-### Cumple parcialmente
-
-No se detectan puntos de cumplimiento parcial en la auditoria actual.
-
-### No cumple
-
-No se detectan puntos incumplidos en la auditoria actual.
