@@ -20,14 +20,14 @@ print(f"[{nombre}] Solicitando turno para el sector: {sector}...")
 loop_activo = True
 while loop_activo:
     respuesta = dgram.receive_from(cola_respuesta, timeout=1)
-    if respuesta != None or not control.is_alive():
+    if respuesta != None:
+        resultado = respuesta.sdu["turno"]
+
+        if resultado == "Especialidad INEXISTENTE" or resultado == "no hay disponibilidad":
+            print(f"[{nombre}] Solicitud rechazada: {resultado}")
+            print(f"[{nombre}] Finalizando proceso.")
+        else:
+            print(f"[{nombre}] Turno asignado: {resultado}")
         loop_activo = False
-
-if respuesta != None:
-    resultado = respuesta.sdu["turno"]
-
-    if resultado == "Especialidad INEXISTENTE" or resultado == "no hay disponibilidad":
-        print(f"[{nombre}] Solicitud rechazada: {resultado}")
-        print(f"[{nombre}] Finalizando proceso.")
-    else:
-        print(f"[{nombre}] Turno asignado: {resultado}")
+    if not control.is_alive():
+        loop_activo = False

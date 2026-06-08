@@ -8,8 +8,6 @@ cola_termina = "Lab_termina"
 cola_liberacion = "Lab_liberacion"
 estaciones_libres_queue = "Lab_estaciones_libres"
 
-r.delete(estaciones_libres_queue)
-
 r.rpush(estaciones_libres_queue, "1")
 r.rpush(estaciones_libres_queue, "2")
 
