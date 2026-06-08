@@ -7,16 +7,7 @@ control.start()
 
 print("[Controlador] Inicializando la agenda de turnos...")
 
-#Borrar sectores
-#Hardocdeados los sectores?
-#sectores_validos = {"Envasado", "Empaque", "Limpieza"}
-control.delete("sector:Envasado")
-control.delete("sector:Empaque")
-control.delete("sector:Limpieza")
-
-control.start("sector:Envasado")
-control.start("sector:Empaque")
-control.start("sector:Limpieza")
+sectores_validos = {"Envasado", "Empaque", "Limpieza"}
 
 dgram.send_to("agenda:Envasado", MPDU(sdu="08:00"))
 dgram.send_to("agenda:Envasado", MPDU(sdu="08:30"))
@@ -34,9 +25,7 @@ while loop_activo:
             tecnico = msg.sdu["tecnico"]
             sector = msg.sdu["sector"]
             
-            sector_existe = control.is_alive(f"sector:{sector}")
-            #sector_existe = dgram.cant_cola(f"agenda:{sector}")
-            #sector_existe = sector in sectores_validos
+            sector_existe = sector in sectores_validos
             if sector_existe:
                 if dgram.cant_cola(f"agenda:{sector}") > 0:
                     turno_mpdu = dgram.receive_from(f"agenda:{sector}", timeout=1)
