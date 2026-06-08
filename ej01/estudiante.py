@@ -21,24 +21,21 @@ r.rpush(cola_solicitudes_estudiantes, solicitud)
 loop_activo = True
 
 while loop_activo:
-    respuesta_recibida = r.blpop(cola_respuesta_estudiante)
+    respuesta_recibida = r.blpop(cola_respuesta_estudiante, timeout = 1)
+    if respuesta_recibida:
 
-    num_estacion = respuesta_recibida[1]
+        num_estacion = respuesta_recibida[1]
 
-    print(f"[{nombre_estudiante}] Asignado a estación {num_estacion}. Editando...")
-    time.sleep(random.randint(2, 5)) #Fingimos el tiempo que usamos la estacion
-    mensaje_liberacion = f"{nombre_estudiante},{grupo_estudiante},{num_estacion}"
-    r.rpush(cola_liberacion, mensaje_liberacion)
-
-    senal_termina = r.blpop(cola_termina, timeout=1)
-    
-    if senal_termina:
+        print(f"[{nombre_estudiante}] Asignado a estación {num_estacion}. Editando...")
+        time.sleep(random.randint(2, 5)) #Fingimos el tiempo que usamos la estacion
+        mensaje_liberacion = f"{nombre_estudiante},{grupo_estudiante},{num_estacion}"
+        r.rpush(cola_liberacion, mensaje_liberacion)
+        print(f"[{nombre_estudiante}] Edición finalizada.")
         loop_activo = False
 
+    if r.exists(cola_termina):
+        loop_activo = False
+        print(f"[{nombre_estudiante}]: Señal recibida. Terminando")
 
-#Hasta acá
-
-
-print(f"[{nombre_estudiante}] Edición finalizada.")
 
 r.close()

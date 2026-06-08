@@ -11,8 +11,6 @@ NUM_ESTACIONES = 2
 
 r.delete(estaciones_libres_queue)
 
-#for num_estacion in range(1, NUM_ESTACIONES + 1):
-#    r.rpush(estaciones_libres_queue, str(num_estacion))
 r.rpush(estaciones_libres_queue, "1")
 r.rpush(estaciones_libres_queue, "2")
 
@@ -72,9 +70,7 @@ while loop_activo:
         r.delete(f"Lab_grupo_{grupo_libera}")
         r.delete(f"Lab_estacion_ocupada_{estacion_liberada}")
 
-    senal_termina = r.blpop(cola_termina, timeout=1)
-    
-    if senal_termina:
+    if r.exists(cola_termina):
         loop_activo = False
 
 r.delete(estaciones_libres_queue)
