@@ -71,6 +71,7 @@ while loop_activo:
     if r.exists(cola_termina):
         loop_activo = False
 
+
 r.delete(cola_estaciones_libres)
 r.delete("Lab_solicitudes")
 r.delete("Lab_espera")
