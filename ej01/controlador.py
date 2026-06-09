@@ -55,9 +55,10 @@ while loop_activo:
                     
             estudiantes_revisados = estudiantes_revisados + 1
 
-    liberacion_recibida = r.blpop(cola_liberacion, timeout=1)
+    cantidad_liberaciones = r.llen(cola_liberacion)
 
-    if liberacion_recibida:
+    for i in range(cantidad_liberaciones):
+        liberacion_recibida = r.lpop(cola_liberacion)
         liberacion_separado = liberacion_recibida[1].split(",")
         nombre_libera = liberacion_separado[0]
         grupo_libera = liberacion_separado[1]
