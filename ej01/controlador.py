@@ -6,10 +6,10 @@ cola_solicitudes_estudiantes = "Lab_solicitudes"
 cola_espera_estudiantes = "Lab_espera"
 cola_termina = "Lab_termina"
 cola_liberacion = "Lab_liberacion"
-estaciones_libres_queue = "Lab_estaciones_libres"
+cola_estaciones_libres = "Lab_estaciones_libres"
 
-r.rpush(estaciones_libres_queue, "1")
-r.rpush(estaciones_libres_queue, "2")
+r.rpush(cola_estaciones_libres, "1")
+r.rpush(cola_estaciones_libres, "2")
 
 print("[CONTROLADOR] Iniciado.")
 
@@ -22,7 +22,7 @@ while loop_activo:
         r.rpush(cola_espera_estudiantes, solicitud)
         
     cantidad_en_espera = r.llen(cola_espera_estudiantes) 
-    estaciones_libres = r.llen(estaciones_libres_queue)
+    estaciones_libres = r.llen(cola_estaciones_libres)
     asignado = False
 
     if cantidad_en_espera > 0 and estaciones_libres > 0:
@@ -39,7 +39,7 @@ while loop_activo:
                 asignado = False
                 
                 if not grupo_ocupado:
-                    estacion_disponible = r.lpop(estaciones_libres_queue) 
+                    estacion_disponible = r.lpop(cola_estaciones_libres) 
 
                     if estacion_disponible:
                         r.set(grupo_clave, "1")
@@ -64,14 +64,14 @@ while loop_activo:
         grupo_libera = liberacion_separado[1]
         estacion_liberada = liberacion_separado[2]
         print(f"[CONTROLADOR] Estación {estacion_liberada} liberada por {nombre_libera}")
-        r.rpush(estaciones_libres_queue, estacion_liberada)
+        r.rpush(cola_estaciones_libres, estacion_liberada)
         r.delete(f"Lab_grupo_{grupo_libera}")
         r.delete(f"Lab_estacion_ocupada_{estacion_liberada}")
 
     if r.exists(cola_termina):
         loop_activo = False
 
-r.delete(estaciones_libres_queue)
+r.delete(cola_estaciones_libres)
 r.delete("Lab_solicitudes")
 r.delete("Lab_espera")
 r.delete("Lab_liberacion")
