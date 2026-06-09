@@ -20,6 +20,6 @@ if lista_espera:
         solicitud_separada = solicitud.split(",")
         nombre = solicitud_separada[0]
         grupo = solicitud_separada[1]
-        print(f"`[]{nombre} (Grupo {grupo})")
+        print(f"[{nombre}] (Grupo {grupo})")
 else:
     print("Cola de espera vacía.")

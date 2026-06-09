@@ -59,7 +59,7 @@ while loop_activo:
 
     for i in range(cantidad_liberaciones):
         liberacion_recibida = r.lpop(cola_liberacion)
-        liberacion_separado = liberacion_recibida[1].split(",")
+        liberacion_separado = liberacion_recibida.split(",")
         nombre_libera = liberacion_separado[0]
         grupo_libera = liberacion_separado[1]
         estacion_liberada = liberacion_separado[2]
