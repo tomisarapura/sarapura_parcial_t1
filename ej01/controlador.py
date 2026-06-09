@@ -71,6 +71,19 @@ while loop_activo:
         loop_activo = False
 
 r.delete(estaciones_libres_queue)
+r.delete("Lab_solicitudes")
+r.delete("Lab_espera")
+r.delete("Lab_liberacion")
+r.delete("Lab_estaciones_libres")
+claves_estaciones = r.keys("Lab_estacion_ocupada_*")
+if claves_estaciones:
+    r.delete(*claves_estaciones)
+claves_grupos = r.keys("Lab_grupo_*")
+if claves_grupos:
+    r.delete(*claves_grupos)
+r.delete("Lab_termina")
+
 print("[CONTROLADOR] Finalizando.")
 r.close()
+
 print("[CONTROLADOR] Sistema detenido")
