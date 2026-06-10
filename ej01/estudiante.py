@@ -1,6 +1,7 @@
 import sys
 import time
 import random
+
 from _redisconnect import redisconnect
 
 r = redisconnect()
@@ -27,15 +28,14 @@ while loop_activo:
         num_estacion = respuesta_recibida[1]
 
         print(f"[{nombre_estudiante}] Asignado a estación {num_estacion}. Editando...")
-        time.sleep(random.randint(2, 5)) #Fingimos el tiempo que usamos la estacion
+        time.sleep(random.randint(2, 5))                                                  #Fingimos el tiempo que usamos la estacion
         mensaje_liberacion = f"{nombre_estudiante},{grupo_estudiante},{num_estacion}"
-        r.rpush(cola_liberacion, mensaje_liberacion)
+        r.rpush(cola_liberacion, mensaje_liberacion)                                      #Cargamos en la cola de liberación la info de la estación que se termina de usar 
         print(f"[{nombre_estudiante}] Edición finalizada.")
-        loop_activo = False
+        loop_activo = False                                                               #Corta  el loop después de usar la estación porque no tiene nada más que hacer
 
     if r.exists(cola_termina):
         loop_activo = False
         print(f"[{nombre_estudiante}]: Señal recibida. Terminando")
-
 
 r.close()
