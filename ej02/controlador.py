@@ -34,7 +34,7 @@ while loop_activo:
                     mensaje_respuesta = turno_asignado
                 else:
                     mensaje_respuesta = "no hay disponibilidad"
-                    print(f"[CONTROLADOR] Turno rechazado para {tecnico} ({sector}) - no hay disponibilidad")
+                    print(f"[CONTROLADOR] Turno rechazado para {tecnico} ({sector}) - No hay disponibilidad")
             else: 
                 mensaje_respuesta = "Especialidad INEXISTENTE"
                 print(f"[CONTROLADOR] Turno rechazado para {tecnico} ({sector}) - Especialidad INEXISTENTE")
