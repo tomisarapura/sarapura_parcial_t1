@@ -1,6 +1,6 @@
 from datagram_modules import MPDU, Datagrama, ControlSistema
 
-cola = "turnos"
+cola = "solicitud_turnos"
 dgram = Datagrama()
 control = ControlSistema()
 control.start()

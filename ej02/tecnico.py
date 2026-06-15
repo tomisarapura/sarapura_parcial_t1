@@ -4,7 +4,7 @@ import sys
 nombre = sys.argv[1] if len(sys.argv) > 1 else "tecnicoX"
 sector = sys.argv[2] if len(sys.argv) > 2 else "Empaque"
 
-cola_principal = "turnos"
+cola_principal = "solicitud_turnos"
 cola_respuesta = f"respuesta_{nombre}"
 
 dgram = Datagrama()
