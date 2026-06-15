@@ -14,6 +14,7 @@ solicitud = MPDU(
     hdr={"tipo": "turno"},
     sdu={"tecnico": nombre, "sector": sector}
 )
+
 dgram.send_to(cola_principal, solicitud)
 print(f"[{nombre}] Solicitando turno para el sector: {sector}...")
 
