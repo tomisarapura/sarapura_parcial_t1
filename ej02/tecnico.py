@@ -1,5 +1,6 @@
-from datagram_modules import MPDU, Datagrama, ControlSistema
 import sys
+
+from datagram_modules import MPDU, Datagrama, ControlSistema
 
 nombre = sys.argv[1] if len(sys.argv) > 1 else "tecnicoX"
 sector = sys.argv[2] if len(sys.argv) > 2 else "Empaque"
@@ -26,9 +27,11 @@ while loop_activo:
 
         if resultado == "Especialidad INEXISTENTE" or resultado == "no hay disponibilidad":
             print(f"[{nombre}] Solicitud rechazada: {resultado}")
-            print(f"[{nombre}] Finalizando proceso.")
         else:
             print(f"[{nombre}] Turno asignado: {sector} a las {resultado}")
         loop_activo = False
     if not control.is_alive():
+        print("Solicitud de termina.py recibida")
         loop_activo = False
+
+print(f"[{nombre}] Finalizando proceso.")
