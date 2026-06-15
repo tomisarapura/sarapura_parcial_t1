@@ -47,4 +47,8 @@ while loop_activo:
     
     if not control.is_alive():
         print("[CONTROLADOR] Sistema finalizado.")
+        for sector in sectores_validos:
+            while dgram.cant_cola(f"agenda:{sector}") > 0:
+                dgram.receive_from(f"agenda:{sector}")
         loop_activo = False
+
