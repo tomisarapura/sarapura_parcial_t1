@@ -28,7 +28,7 @@ while loop_activo:
             print(f"[{nombre}] Solicitud rechazada: {resultado}")
             print(f"[{nombre}] Finalizando proceso.")
         else:
-            print(f"[{nombre}] Turno asignado: {resultado}")
+            print(f"[{nombre}] Turno asignado: {sector} a las {resultado}")
         loop_activo = False
     if not control.is_alive():
         loop_activo = False
