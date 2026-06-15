@@ -1,6 +1,6 @@
 import time
 
-from datagram_modules import MPDU, Datagrama, ControlSistema
+from datagram_modules import ControlSistema
 
 control = ControlSistema()
 
