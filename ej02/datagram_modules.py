@@ -29,7 +29,7 @@ class ControlSistema: # Clase para manejar el control de sistemas
     def stop(self, clave: str = "sistema") -> None:    
         """Desactiva el sistema al enviar un mensaje a la cola de control."""
         with self.redis_connection() as r:
-            r.rpush(clave, "inactivo")
+            r.rpush(clave, "inactivo") #LPUSH
     def is_alive(self, clave: str = "sistema") -> bool:
         """Retorna True si la cola existe y el contenido es 'activo', sino False."""
         valor = False
