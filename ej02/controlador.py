@@ -38,6 +38,7 @@ while loop_activo:
             else: 
                 mensaje_respuesta = "Especialidad INEXISTENTE"
                 print(f"[CONTROLADOR] Turno rechazado para {tecnico} ({sector}) - Especialidad INEXISTENTE")
+            
             respuesta = MPDU(
                 hdr={"tipo": "respuesta_turno"},
                 sdu={"turno": mensaje_respuesta}
